@@ -1,0 +1,142 @@
+CREATE DATABASE Bank;
+USE Bank;
+
+CREATE TABLE Branch(
+    branch_name VARCHAR(50) PRIMARY KEY,
+    branch_city VARCHAR(50) NOT NULL,
+    asset DECIMAL(12,2) NOT NULL
+);
+
+CREATE TABLE Account(
+    acc_no INT PRIMARY KEY,
+    branch_name VARCHAR(50),
+    balance DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY(branch_name) REFERENCES Branch(branch_name)
+);
+
+CREATE TABLE Customer(
+    cust_name VARCHAR(50) PRIMARY KEY,
+    cust_street VARCHAR(100) NOT NULL,
+    cust_city VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Depositor(
+    cust_name VARCHAR(50),
+    acc_no INT,
+    PRIMARY KEY(cust_name, acc_no),
+    FOREIGN KEY(cust_name) REFERENCES Customer(cust_name),
+    FOREIGN KEY(acc_no) REFERENCES Account(acc_no)
+);
+
+CREATE TABLE Loan(
+    loan_no INT PRIMARY KEY,
+    branch_name VARCHAR(50),
+    amount DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY(branch_name) REFERENCES Branch(branch_name)
+);
+
+CREATE TABLE Borrower(
+    cust_name VARCHAR(50),
+    loan_no INT,
+    PRIMARY KEY(cust_name, loan_no),
+    FOREIGN KEY(cust_name) REFERENCES Customer(cust_name),
+    FOREIGN KEY(loan_no) REFERENCES Loan(loan_no)
+);
+
+INSERT INTO Branch VALUES
+('Wadia College','Pune',500000),
+('Shivaji Nagar','Mumbai',700000),
+('FC Road','Pune',400000);
+
+INSERT INTO Account VALUES
+(101,'Wadia College',25000),
+(102,'FC Road',18000),
+(103,'Shivaji Nagar',30000);
+
+INSERT INTO Customer VALUES
+('Vinay','JM Road','Pune'),
+('Rahul','Camp','Pune'),
+('Sneha','MG Road','Mumbai');
+
+INSERT INTO Depositor VALUES
+('Vinay',101),
+('Rahul',102),
+('Sneha',103);
+
+INSERT INTO Loan VALUES
+(201,'Wadia College',15000),
+(202,'FC Road',10000),
+(203,'Wadia College',20000);
+
+INSERT INTO Borrower VALUES
+('Vinay',201),
+('Rahul',202),
+('Sneha',203);
+
+SELECT DISTINCT D.cust_name
+FROM Depositor D
+JOIN Borrower B
+ON D.cust_name = B.cust_name;
+
+SELECT cust_name FROM Depositor
+UNION
+SELECT cust_name FROM Borrower;
+
+SELECT cust_name
+FROM Depositor
+WHERE cust_name NOT IN (
+    SELECT cust_name FROM Borrower
+);
+
+SELECT AVG(balance) AS avg_balance
+FROM Account
+WHERE branch_name = 'Wadia College';
+
+SELECT A.branch_name, COUNT(DISTINCT D.cust_name) AS num_depositors
+FROM Account A
+JOIN Depositor D
+ON A.acc_no = D.acc_no
+GROUP BY A.branch_name;
+
+
+Aim-
+To perform SQL operations on a Bank database by creating related tables, inserting records, and executing queries using JOIN, UNION, aggregate functions, subqueries, and GROUP BY clauses.
+
+Objectives-
+To create a Bank database with appropriate tables and constraints.
+To establish relationships between tables using primary and foreign keys.
+To insert records into different banking tables.
+To retrieve customers having both loan and account facilities using JOIN.
+To retrieve customers having either an account or loan using UNION.
+To find customers having accounts but no loans using subqueries.
+To calculate average account balance using aggregate functions.
+To count the number of depositors branch-wise using GROUP BY.
+
+Theory-
+A Relational Database Management System (RDBMS) stores data in related tables. SQL (Structured Query Language) is used to create, manage, and retrieve data from databases.
+
+In this experiment, the following SQL concepts are used:
+CREATE DATABASE: Creates a new database.
+CREATE TABLE: Defines tables with attributes and constraints.
+PRIMARY KEY: Ensures uniqueness of records.
+FOREIGN KEY: Maintains relationships between tables.
+INSERT INTO: Inserts records into tables.
+JOIN: Combines records from two or more tables based on common attributes.
+UNION: Combines results from multiple SELECT statements without duplicates.
+SUBQUERY: A query written inside another query.
+AVG(): Aggregate function used to calculate average values.
+COUNT(): Counts the number of records.
+GROUP BY: Groups rows having the same values.
+
+The database includes the following tables:
+Branch: Stores branch information.
+Account: Stores account details.
+Customer: Stores customer information.
+Depositor: Maintains relationship between customers and accounts.
+Loan: Stores loan details.
+Borrower: Maintains relationship between customers and loans.
+
+The queries demonstrate retrieval of customers with accounts and loans, customers with either facility, customers without loans, average balance calculation, and branch-wise depositor count.
+
+Conclusion-
+The Bank database was successfully created with proper relational constraints. Data was inserted and various SQL queries were executed successfully using JOIN, UNION, aggregate functions, subqueries, and GROUP BY clauses. This experiment improved understanding of relational database design, data retrieval techniques, and SQL query execution in DBMS.
