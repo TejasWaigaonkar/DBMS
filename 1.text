@@ -1,0 +1,158 @@
+-- Create Database
+CREATE DATABASE Bank;
+
+-- Use Database
+USE Bank;
+
+CREATE TABLE Branch(
+    branch_name VARCHAR(50) PRIMARY KEY,
+    branch_city VARCHAR(50) NOT NULL,
+    asset DECIMAL(12,2) NOT NULL
+);
+
+CREATE TABLE Account(
+    acc_no INT PRIMARY KEY,
+    branch_name VARCHAR(50),
+    balance DECIMAL(10,2) NOT NULL,
+    
+    FOREIGN KEY(branch_name)
+    REFERENCES Branch(branch_name)
+);
+
+CREATE TABLE Customer(
+    cust_name VARCHAR(50) PRIMARY KEY,
+    cust_street VARCHAR(100) NOT NULL,
+    cust_city VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Depositor(
+    cust_name VARCHAR(50),
+    acc_no INT,
+
+    PRIMARY KEY(cust_name, acc_no),
+
+    FOREIGN KEY(cust_name)
+    REFERENCES Customer(cust_name),
+
+    FOREIGN KEY(acc_no)
+    REFERENCES Account(acc_no)
+);
+
+CREATE TABLE Loan(
+    loan_no INT PRIMARY KEY,
+    branch_name VARCHAR(50),
+    amount DECIMAL(10,2) NOT NULL,
+
+    FOREIGN KEY(branch_name)
+    REFERENCES Branch(branch_name)
+);
+
+CREATE TABLE Borrower(
+    cust_name VARCHAR(50),
+    loan_no INT,
+
+    PRIMARY KEY(cust_name, loan_no),
+
+    FOREIGN KEY(cust_name)
+    REFERENCES Customer(cust_name),
+
+    FOREIGN KEY(loan_no)
+    REFERENCES Loan(loan_no)
+);
+
+INSERT INTO Branch VALUES
+('Wadia College','Pune',500000),
+('Shivaji Nagar','Mumbai',700000),
+('FC Road','Pune',400000);
+
+INSERT INTO Account VALUES
+(101,'Wadia College',25000),
+(102,'FC Road',18000),
+(103,'Shivaji Nagar',30000);
+
+INSERT INTO Customer VALUES
+('Vinay','JM Road','Pune'),
+('Rahul','Camp','Pune'),
+('Sneha','MG Road','Mumbai');
+
+INSERT INTO Depositor VALUES
+('Vinay',101),
+('Rahul',102),
+('Sneha',103);
+
+INSERT INTO Loan VALUES
+(201,'Wadia College',15000),
+(202,'FC Road',10000),
+(203,'Wadia College',20000);
+
+INSERT INTO Borrower VALUES
+('Vinay',201),
+('Rahul',202),
+('Sneha',203);
+
+SELECT branch_name
+FROM Loan;
+
+SELECT loan_no
+FROM Loan
+WHERE branch_name='Wadia College'
+AND amount > 12000;
+
+SELECT Borrower.cust_name,
+       Loan.loan_no,
+       Loan.amount
+FROM Borrower
+JOIN Loan
+ON Borrower.loan_no = Loan.loan_no;
+
+SELECT Borrower.cust_name
+FROM Borrower
+JOIN Loan
+ON Borrower.loan_no = Loan.loan_no
+WHERE Loan.branch_name='Wadia College'
+ORDER BY Borrower.cust_name ASC;
+
+SELECT DISTINCT branch_city
+FROM Branch;
+
+
+
+
+Aim-
+To create and manage a Bank database using SQL by implementing tables with primary key and foreign key constraints, inserting records, and performing SQL queries to retrieve required information from the database.
+
+Objectives-
+To create a database named Bank.
+To create tables such as Account, Branch, Customer, Depositor, Loan, and Borrower with proper constraints.
+To establish relationships between tables using primary keys and foreign keys.
+To insert records into the tables.
+To perform SQL queries for data retrieval and manipulation.
+To understand relational database concepts and SQL operations.
+
+Theory-
+A Database Management System (DBMS) is software used to store, manage, and retrieve data efficiently. In relational databases, data is stored in the form of tables consisting of rows and columns.
+
+In this experiment, a banking database is created using SQL commands. The following concepts are used:
+CREATE DATABASE: Used to create a new database.
+CREATE TABLE: Used to create tables with columns and constraints.
+PRIMARY KEY: Uniquely identifies each record in a table.
+FOREIGN KEY: Creates relationships between tables.
+NOT NULL: Ensures that a column cannot contain NULL values.
+INSERT INTO: Used to add records into tables.
+SELECT: Retrieves data from tables.
+JOIN: Combines records from multiple tables based on related columns.
+ORDER BY: Sorts records in ascending or descending order.
+DISTINCT: Removes duplicate values from the result.
+
+The database contains:
+Branch table for branch information.
+Account table for account details.
+Customer table for customer information.
+Depositor table linking customers and accounts.
+Loan table storing loan details.
+Borrower table linking customers and loans.
+
+SQL queries are executed to retrieve branch names, loan details, borrower information, and distinct branch cities.
+
+Conclusion-
+The Bank database was successfully created using SQL. Tables were implemented with appropriate constraints and relationships. Records were inserted successfully, and various SQL queries were executed to retrieve meaningful information from the database. This experiment helped in understanding database design, table relationships, constraints, and SQL query operations in a relational database management system.
