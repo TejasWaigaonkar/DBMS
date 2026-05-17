@@ -1,0 +1,99 @@
+CREATE DATABASE Companies;
+USE Companies;
+
+CREATE TABLE Companies(
+    comp_id INT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    cost DECIMAL(10,2),
+    year INT
+);
+
+CREATE TABLE Orders(
+    comp_id INT,
+    domain VARCHAR(50),
+    quantity INT,
+    FOREIGN KEY(comp_id) REFERENCES Companies(comp_id)
+);
+
+SELECT C.name, C.cost, O.domain, O.quantity
+FROM Companies C
+INNER JOIN Orders O
+ON C.comp_id = O.comp_id;
+
+SELECT C.name, C.cost, O.domain, O.quantity
+FROM Companies C
+LEFT JOIN Orders O
+ON C.comp_id = O.comp_id;
+
+SELECT C.name, C.cost, O.domain, O.quantity
+FROM Companies C
+RIGHT JOIN Orders O
+ON C.comp_id = O.comp_id;
+
+SELECT C.name, C.cost, O.domain, O.quantity
+FROM Companies C
+LEFT JOIN Orders O
+ON C.comp_id = O.comp_id
+
+UNION
+
+SELECT C.name, C.cost, O.domain, O.quantity
+FROM Companies C
+RIGHT JOIN Orders O
+ON C.comp_id = O.comp_id;
+
+CREATE VIEW View1 AS
+SELECT C.name, O.quantity
+FROM Companies C
+JOIN Orders O
+ON C.comp_id = O.comp_id;
+
+CREATE VIEW View2 AS
+SELECT comp_id, name
+FROM Companies;
+
+INSERT INTO View2 VALUES (101, 'TCS');
+
+UPDATE View2
+SET name = 'Infosys'
+WHERE comp_id = 101;
+
+DELETE FROM View2
+WHERE comp_id = 101;
+
+Aim-
+To create and manage a Companies database using SQL by implementing tables, performing different types of JOIN operations, creating views, and executing data manipulation operations through views.
+
+Objectives-
+To create a Companies database with related tables.
+To define primary and foreign key relationships between tables.
+To perform INNER JOIN, LEFT JOIN, RIGHT JOIN, and UNION operations.
+To create and use SQL views for data abstraction.
+To insert, update, and delete data using views.
+To understand how views interact with base tables in SQL.
+
+Theory-
+A Relational Database Management System (RDBMS) stores data in structured tables. SQL (Structured Query Language) is used to define, manipulate, and retrieve this data.
+
+In this experiment, multiple relational concepts are demonstrated:
+CREATE DATABASE: Used to create a new database.
+CREATE TABLE: Defines table structure with attributes and constraints.
+PRIMARY KEY: Uniquely identifies each record in a table.
+FOREIGN KEY: Maintains relationships between tables.
+INNER JOIN: Returns only matching records from both tables.
+LEFT JOIN: Returns all records from the left table and matching records from the right table.
+RIGHT JOIN: Returns all records from the right table and matching records from the left table.
+UNION: Combines results of two queries and removes duplicates.
+VIEW: A virtual table based on an SQL query that simplifies data access.
+
+Two views are created:
+View1: Shows company name and order quantity using JOIN.
+View2: Shows company ID and name for data manipulation.
+
+The experiment also demonstrates that:
+Views can be used to insert data (if updatable).
+Views can be used to update records in the base table.
+Views can also be used to delete records, depending on constraints.
+
+Conclusion-
+The Companies database was successfully created and managed using SQL. Different types of JOIN operations were executed to retrieve combined data from multiple tables. Views were created and used for data abstraction and manipulation, including INSERT, UPDATE, and DELETE operations. This experiment helped in understanding relational database concepts, JOIN operations, and the practical usage of SQL views in database management
