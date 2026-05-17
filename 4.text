@@ -1,0 +1,105 @@
+CREATE DATABASE Order;
+USE Order;
+
+CREATE TABLE Cust_Master(
+    cust_no VARCHAR(10) PRIMARY KEY,
+    cust_name VARCHAR(50) NOT NULL,
+    cust_addr VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Orders(
+    order_no INT PRIMARY KEY,
+    cust_no VARCHAR(10),
+    order_date DATE NOT NULL,
+    qty_ordered INT NOT NULL,
+    FOREIGN KEY(cust_no) REFERENCES Cust_Master(cust_no)
+);
+
+CREATE TABLE Product(
+    product_no INT PRIMARY KEY,
+    product_name VARCHAR(50) NOT NULL,
+    order_no INT,
+    FOREIGN KEY(order_no) REFERENCES Orders(order_no)
+);
+
+INSERT INTO Cust_Master VALUES
+('C1001','Raj','Pune'),
+('C1002','Aman','Banglore'),
+('C1003','Karan','Manglore'),
+('C1004','Ramesh','Mumbai'),
+('C1005','Sagar','Banglore'),
+('C1007','Mahesh','Manglore'),
+('C1008','Tarun','Delhi');
+
+INSERT INTO Orders VALUES
+(1,'C1002','2026-05-10',2),
+(2,'C1005','2026-05-11',5),
+(3,'C1007','2026-05-12',1),
+(4,'C1008','2026-05-13',3);
+
+INSERT INTO Product VALUES
+(101,'Laptop',1),
+(102,'Mouse',2),
+(103,'Keyboard',3),
+(104,'Monitor',4);
+
+SELECT cust_name
+FROM Cust_Master
+WHERE cust_name LIKE '_A%';
+
+SELECT *
+FROM Orders
+WHERE cust_no IN ('C1002','C1005','C1007','C1008');
+
+SELECT *
+FROM Cust_Master
+WHERE cust_addr IN ('Banglore','Manglore');
+
+SELECT C.cust_name, P.product_name
+FROM Cust_Master C
+JOIN Orders O
+ON C.cust_no = O.cust_no
+JOIN Product P
+ON O.order_no = P.order_no;
+
+CREATE VIEW View1 AS
+SELECT C.cust_name, P.product_name
+FROM Cust_Master C
+JOIN Orders O
+ON C.cust_no = O.cust_no
+JOIN Product P
+ON O.order_no = P.order_no;
+
+SELECT C.cust_name, P.product_name, O.qty_ordered
+FROM Cust_Master C
+JOIN Orders O
+ON C.cust_no = O.cust_no
+JOIN Product P
+ON O.order_no = P.order_no;
+
+SELECT C.cust_name, O.order_no
+FROM Cust_Master C
+INNER JOIN Orders O
+ON C.cust_no = O.cust_no;
+
+SELECT C.cust_name, O.order_no
+FROM Cust_Master C
+LEFT JOIN Orders O
+ON C.cust_no = O.cust_no;
+
+SELECT C.cust_name, O.order_no
+FROM Cust_Master C
+RIGHT JOIN Orders O
+ON C.cust_no = O.cust_no;
+
+SELECT C.cust_name, O.order_no
+FROM Cust_Master C
+LEFT JOIN Orders O
+ON C.cust_no = O.cust_no
+
+UNION
+
+SELECT C.cust_name, O.order_no
+FROM Cust_Master C
+RIGHT JOIN Orders O
+ON C.cust_no = O.cust_no;
