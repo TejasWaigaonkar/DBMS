@@ -61,6 +61,15 @@ WHERE comp_id = 101;
 DELETE FROM View2
 WHERE comp_id = 101;
 
+INSERT INTO Companies VALUES (1, 'TCS', 50000, 2023);
+INSERT INTO Orders VALUES (1, 'IT', 10);
+
+SELECT * FROM View1;
+
+SELECT * FROM View2;
+
+SELECT * FROM Companies;
+
 Aim-
 To create and manage a Companies database using SQL by implementing tables, performing different types of JOIN operations, creating views, and executing data manipulation operations through views.
 
