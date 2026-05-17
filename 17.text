@@ -1,0 +1,108 @@
+CREATE DATABASE LibraryDB;
+
+USE LibraryDB;
+
+CREATE TABLE Library (
+    Book_id INT PRIMARY KEY,
+    Book_Name VARCHAR(50),
+    Author VARCHAR(50),
+    Price DECIMAL(10,2)
+);
+
+CREATE TABLE Library_Audit (
+    Book_id INT,
+    Book_Name VARCHAR(50),
+    Author VARCHAR(50),
+    Price DECIMAL(10,2),
+    Action_Type VARCHAR(20),
+    Action_Date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO Library VALUES
+(1, 'DBMS', 'Korth', 500),
+(2, 'OS', 'Galvin', 600);
+
+DELIMITER //
+
+CREATE TRIGGER before_library_update
+BEFORE UPDATE ON Library
+FOR EACH ROW
+BEGIN
+
+    INSERT INTO Library_Audit
+    VALUES (
+        OLD.Book_id,
+        OLD.Book_Name,
+        OLD.Author,
+        OLD.Price,
+        'BEFORE UPDATE',
+        NOW()
+    );
+
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER after_library_delete
+AFTER DELETE ON Library
+FOR EACH ROW
+BEGIN
+
+    INSERT INTO Library_Audit
+    VALUES (
+        OLD.Book_id,
+        OLD.Book_Name,
+        OLD.Author,
+        OLD.Price,
+        'AFTER DELETE',
+        NOW()
+    );
+
+END //
+
+DELIMITER ;
+
+UPDATE Library
+SET Price = 700
+WHERE Book_id = 1;
+
+DELETE FROM Library
+WHERE Book_id = 2;
+
+SELECT * FROM Library;
+
+SELECT * FROM Library_Audit;
+
+Aim-
+To create row-level triggers in MySQL that maintain an audit log of updated and deleted records from the Library table.
+
+Objective-
+To understand the concept of triggers in MySQL.
+To implement BEFORE UPDATE and AFTER DELETE triggers.
+To maintain an audit table for tracking changes.
+To store old values of updated and deleted records.
+To understand the use of OLD keyword in triggers.
+To perform automatic logging of database activities.
+
+Theory-
+A trigger is a database object that automatically executes when specific events such as INSERT, UPDATE, or DELETE occur on a table.
+
+In this experiment:
+A Library table stores book details.
+A Library_Audit table is created to store old records before update and after delete operations.
+Two row-level triggers are implemented:
+BEFORE UPDATE trigger → stores old values before updating records.
+AFTER DELETE trigger → stores deleted records in the audit table.
+
+The OLD keyword is used inside triggers to access previous values of records.
+
+Whenever:
+A record is updated → the old record is inserted into Library_Audit with action type BEFORE UPDATE.
+A record is deleted → the deleted record is inserted into Library_Audit with action type AFTER DELETE.
+
+This mechanism helps in maintaining history and tracking changes in the database.
+
+Conclusion-
+The row-level triggers were successfully created and executed. The system correctly tracked updated and deleted records by storing old values in the Library_Audit table. This experiment helped in understanding triggers, audit logging, and automatic database event handling in MySQL.
