@@ -1,0 +1,86 @@
+CREATE DATABASE CompanyDB;
+
+USE CompanyDB;
+
+CREATE TABLE CUSTOMERS (
+    ID INT PRIMARY KEY,
+    NAME VARCHAR(50),
+    AGE INT,
+    ADDRESS VARCHAR(100),
+    SALARY DECIMAL(10,2)
+);
+
+CREATE TABLE Salary_Log (
+    Customer_ID INT,
+    Customer_Name VARCHAR(50),
+    Old_Salary DECIMAL(10,2),
+    New_Salary DECIMAL(10,2),
+    Salary_Difference DECIMAL(10,2)
+);
+
+INSERT INTO CUSTOMERS VALUES
+(1, 'Amit', 22, 'Pune', 25000),
+(2, 'Riya', 23, 'Mumbai', 30000);
+
+DELIMITER //
+
+CREATE TRIGGER customer_salary_trigger
+BEFORE UPDATE ON CUSTOMERS
+FOR EACH ROW
+BEGIN
+
+    INSERT INTO Salary_Log
+    VALUES (
+        OLD.ID,
+        OLD.NAME,
+        OLD.SALARY,
+        NEW.SALARY,
+        NEW.SALARY - OLD.SALARY
+    );
+
+END //
+
+DELIMITER ;
+
+UPDATE CUSTOMERS
+SET SALARY = 35000
+WHERE ID = 1;
+
+SELECT * FROM Salary_Log;
+
+Aim-
+To create a MySQL trigger that records salary updates of customers by storing old salary, new salary, and salary difference in a log table.
+
+Objective-
+To understand the concept of triggers in MySQL.
+To implement a BEFORE UPDATE trigger.
+To maintain a salary audit log automatically.
+To store old and new salary values during updates.
+To calculate salary differences using trigger logic.
+To understand the use of OLD and NEW keywords in triggers.
+
+Theory-
+A trigger is a database object that automatically executes when an event such as INSERT, UPDATE, or DELETE occurs on a table.
+
+In this experiment:
+A CUSTOMERS table stores customer details including salary.
+A Salary_Log table is created to maintain records of salary changes.
+A BEFORE UPDATE trigger named customer_salary_trigger is created on the CUSTOMERS table.
+
+Whenever a salary update occurs:
+The trigger captures:
+Customer ID
+Customer Name
+Old Salary
+New Salary
+Salary Difference
+These details are automatically inserted into the Salary_Log table before the actual update takes place.
+
+The trigger uses:
+OLD keyword → accesses existing values before update.
+NEW keyword → accesses modified values after update.
+
+This type of trigger is useful for maintaining audit trails and tracking changes in database records.
+
+Conclusion-
+The trigger was successfully created and executed. It automatically recorded salary updates in the Salary_Log table whenever customer salary values were modified. This experiment helped in understanding triggers, audit logging, and automatic event handling in MySQL databases.
