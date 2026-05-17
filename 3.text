@@ -1,0 +1,139 @@
+CREATE DATABASE Bank;
+USE Bank;
+
+CREATE TABLE Branch(
+    branch_name VARCHAR(50) PRIMARY KEY,
+    branch_city VARCHAR(50) NOT NULL,
+    asset DECIMAL(12,2) NOT NULL
+);
+
+CREATE TABLE Account(
+    acc_no INT PRIMARY KEY,
+    branch_name VARCHAR(50),
+    balance DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY(branch_name) REFERENCES Branch(branch_name)
+);
+
+CREATE TABLE Customer(
+    cust_name VARCHAR(50) PRIMARY KEY,
+    cust_street VARCHAR(100) NOT NULL,
+    cust_city VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Depositor(
+    cust_name VARCHAR(50),
+    acc_no INT,
+    PRIMARY KEY(cust_name, acc_no),
+    FOREIGN KEY(cust_name) REFERENCES Customer(cust_name),
+    FOREIGN KEY(acc_no) REFERENCES Account(acc_no)
+);
+
+CREATE TABLE Loan(
+    loan_no INT PRIMARY KEY,
+    branch_name VARCHAR(50),
+    amount DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY(branch_name) REFERENCES Branch(branch_name)
+);
+
+CREATE TABLE Borrower(
+    cust_name VARCHAR(50),
+    loan_no INT,
+    PRIMARY KEY(cust_name, loan_no),
+    FOREIGN KEY(cust_name) REFERENCES Customer(cust_name),
+    FOREIGN KEY(loan_no) REFERENCES Loan(loan_no)
+);
+
+INSERT INTO Branch VALUES
+('Wadia College','Pune',500000),
+('Shivaji Nagar','Mumbai',700000),
+('FC Road','Pune',400000);
+
+INSERT INTO Account VALUES
+(101,'Wadia College',25000),
+(102,'FC Road',18000),
+(103,'Shivaji Nagar',30000);
+
+INSERT INTO Customer VALUES
+('Vinay','JM Road','Pune'),
+('Rahul','Camp','Pune'),
+('Sneha','MG Road','Mumbai');
+
+INSERT INTO Depositor VALUES
+('Vinay',101),
+('Rahul',102),
+('Sneha',103);
+
+INSERT INTO Loan VALUES
+(201,'Wadia College',15000),
+(202,'FC Road',10000),
+(203,'Wadia College',20000);
+
+INSERT INTO Borrower VALUES
+('Vinay',201),
+('Rahul',202),
+('Sneha',203);
+
+SELECT branch_name, AVG(balance) AS avg_balance
+FROM Account
+GROUP BY branch_name
+HAVING AVG(balance) > 15000;
+
+SELECT COUNT(*) AS total_customers
+FROM Customer;
+
+SELECT SUM(amount) AS total_loan_amount
+FROM Loan;
+
+DELETE FROM Loan
+WHERE amount BETWEEN 1300 AND 1500;
+
+SELECT branch_name, AVG(balance) AS avg_balance
+FROM Account
+GROUP BY branch_name;
+
+SELECT cust_name, cust_city
+FROM Customer
+WHERE cust_name LIKE 'P%';
+
+Aim-
+To create and manipulate a Bank database using SQL queries involving aggregate functions, grouping, filtering, deletion, and pattern matching operations.
+
+Objectives-
+To create tables with primary key and foreign key constraints.
+To insert records into the banking tables.
+To calculate average account balance branch-wise using GROUP BY and HAVING clauses.
+To count the total number of customers.
+To calculate the total loan amount using aggregate functions.
+To delete records using the DELETE statement with conditions.
+To retrieve customer details using pattern matching with LIKE operator.
+To understand SQL data manipulation and retrieval operations.
+
+Theory-
+A Relational Database Management System (RDBMS) stores data in the form of related tables. SQL (Structured Query Language) is used to create, manage, and manipulate data within databases.
+
+This experiment demonstrates the use of various SQL commands and functions:
+CREATE DATABASE: Creates a new database.
+CREATE TABLE: Creates tables with attributes and constraints.
+PRIMARY KEY: Ensures unique identification of records.
+FOREIGN KEY: Maintains relationships between tables.
+INSERT INTO: Adds records into tables.
+AVG(): Calculates the average value of a column.
+COUNT(): Counts the number of records.
+SUM(): Calculates the total sum of values.
+GROUP BY: Groups rows with similar values.
+HAVING: Filters grouped records based on conditions.
+DELETE: Removes records from a table based on conditions.
+LIKE: Used for pattern matching in queries.
+
+The database contains tables such as:
+Branch
+Account
+Customer
+Depositor
+Loan
+Borrower
+
+Queries are performed to calculate branch-wise average balances, total customers, total loan amount, delete specific loan records, and retrieve customer names starting with a specific letter.
+
+Conclusion-
+The Bank database was successfully created and manipulated using SQL commands. Various operations such as aggregate functions, grouping, filtering, deletion, and pattern matching were performed successfully. This experiment enhanced understanding of SQL query execution, relational database concepts, and database management techniques.
