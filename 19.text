@@ -1,0 +1,119 @@
+CREATE DATABASE CompanyDB;
+
+USE CompanyDB;
+
+CREATE TABLE Emp (
+    Emp_no INT PRIMARY KEY,
+    Emp_name VARCHAR(50),
+    Emp_salary DECIMAL(10,2)
+);
+
+CREATE TABLE Tracking (
+    Emp_no INT,
+    Emp_salary DECIMAL(10,2)
+);
+
+INSERT INTO Emp VALUES
+(1, 'Amit', 60000),
+(2, 'Riya', 70000);
+
+DELIMITER //
+
+CREATE TRIGGER emp_insert_trigger
+AFTER INSERT ON Emp
+FOR EACH ROW
+BEGIN
+
+    IF NEW.Emp_salary < 50000 THEN
+
+        INSERT INTO Tracking
+        VALUES (NEW.Emp_no, NEW.Emp_salary);
+
+    END IF;
+
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER emp_update_trigger
+AFTER UPDATE ON Emp
+FOR EACH ROW
+BEGIN
+
+    IF NEW.Emp_salary < 50000 THEN
+
+        INSERT INTO Tracking
+        VALUES (NEW.Emp_no, NEW.Emp_salary);
+
+    END IF;
+
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER emp_delete_trigger
+AFTER DELETE ON Emp
+FOR EACH ROW
+BEGIN
+
+    INSERT INTO Tracking
+    VALUES (OLD.Emp_no, OLD.Emp_salary);
+
+END //
+
+DELIMITER ;
+
+INSERT INTO Emp VALUES
+(3, 'John', 40000);
+
+UPDATE Emp
+SET Emp_salary = 45000
+WHERE Emp_no = 1;
+
+DELETE FROM Emp
+WHERE Emp_no = 2;
+
+SELECT * FROM Emp;
+
+SELECT * FROM Tracking;
+
+Aim-
+To create MySQL triggers for INSERT, UPDATE, and DELETE operations on the Emp table and maintain employee salary records in the Tracking table based on specified conditions.
+
+Objective-
+To understand the concept of triggers in MySQL.
+To implement AFTER INSERT, AFTER UPDATE, and AFTER DELETE triggers.
+To track employee salary records automatically.
+To store employee details when salary is less than ₹50,000.
+To maintain deleted employee records in a tracking table.
+To understand the use of OLD and NEW keywords in triggers.
+
+Theory-
+A trigger is a database object that automatically executes when specific events such as INSERT, UPDATE, or DELETE occur on a table.
+
+In this experiment:
+An Emp table stores employee details.
+A Tracking table stores records based on trigger conditions.
+Three triggers are created:
+1. AFTER INSERT Trigger
+Executes after inserting a new employee record.
+If the inserted salary is less than ₹50,000, the employee details are inserted into the Tracking table.
+2. AFTER UPDATE Trigger
+Executes after updating employee salary.
+If the updated salary becomes less than ₹50,000, the updated details are stored in the Tracking table.
+3. AFTER DELETE Trigger
+Executes after deleting a record from the Emp table.
+Stores deleted employee details in the Tracking table.
+
+The trigger uses:
+NEW keyword → accesses newly inserted or updated values.
+OLD keyword → accesses deleted record values.
+
+These triggers help automate monitoring and auditing of employee salary records.
+
+Conclusion-
+The triggers for INSERT, UPDATE, and DELETE operations were successfully created and executed. The system automatically tracked employee salary details and deleted records in the Tracking table according to the specified conditions. This experiment helped in understanding triggers, event-driven programming, and automatic data tracking in MySQL.
