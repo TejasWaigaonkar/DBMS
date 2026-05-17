@@ -1,0 +1,100 @@
+CREATE DATABASE College;
+USE College;
+
+CREATE TABLE Student (
+    Roll INT PRIMARY KEY,
+    Name VARCHAR(50),
+    Attendance DECIMAL(5,2),
+    Status VARCHAR(20)
+);
+
+INSERT INTO Student VALUES
+(1, 'Amit', 80, 'Unknown'),
+(2, 'Riya', 60, 'Unknown'),
+(3, 'John', 90, 'Unknown');
+
+DELIMITER //
+
+CREATE PROCEDURE check_attendance (IN p_roll INT)
+BEGIN
+    DECLARE v_att DECIMAL(5,2);
+    DECLARE v_count INT;
+
+    -- Exception handler
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        SELECT 'Error occurred during execution' AS Message;
+    END;
+
+    -- check if roll exists
+    SELECT COUNT(*) INTO v_count
+    FROM Student
+    WHERE Roll = p_roll;
+
+    IF v_count = 0 THEN
+        SELECT 'Roll number not found' AS Message;
+
+    ELSE
+        -- get attendance
+        SELECT Attendance INTO v_att
+        FROM Student
+        WHERE Roll = p_roll;
+
+        -- check condition
+        IF v_att < 75 THEN
+            UPDATE Student
+            SET Status = 'Detained'
+            WHERE Roll = p_roll;
+
+            SELECT 'Term not granted' AS Message;
+
+        ELSE
+            UPDATE Student
+            SET Status = 'Not Detained'
+            WHERE Roll = p_roll;
+
+            SELECT 'Term granted' AS Message;
+        END IF;
+
+    END IF;
+
+END //
+
+DELIMITER ;
+
+CALL check_attendance(2);
+
+SELECT * FROM Student;
+
+Aim-
+To create a MySQL stored procedure that checks student attendance and updates their status as “Detained” or “Not Detained” based on attendance percentage.
+
+Objective-
+To create a Student database table with attendance records.
+To implement a stored procedure with input parameters.
+To use conditional statements (IF-ELSE) in SQL.
+To handle exceptions using MySQL error handlers.
+To check student attendance based on roll number.
+To update student status dynamically based on conditions.
+
+Theory-
+A stored procedure is a precompiled set of SQL statements that performs a specific task and can be executed whenever needed. It improves reusability and efficiency.
+
+In this program:
+A Student table stores roll number, name, attendance, and status.
+A stored procedure check_attendance() is created with an input parameter p_roll.
+The procedure checks whether the roll number exists.
+If found, it retrieves attendance and applies conditions:
+Attendance < 75 → Status = Detained
+Attendance ≥ 75 → Status = Not Detained
+An EXIT HANDLER is used to handle SQL exceptions and display an error message.
+
+Key Concepts Used:
+Stored Procedure with IN parameter
+IF-ELSE conditional logic
+SELECT INTO statement
+UPDATE statement
+Exception handling using EXIT HANDLER
+
+Conclusion-
+The stored procedure for checking student attendance was successfully created and executed. It correctly evaluated attendance, updated student status, and handled invalid cases using exception handling. This experiment helped in understanding conditional logic, error handling, and procedural SQL programming in MySQL.
