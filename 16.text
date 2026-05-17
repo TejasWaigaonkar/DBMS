@@ -1,0 +1,62 @@
+CREATE DATABASE PeopleDB;
+USE PeopleDB;
+
+DELIMITER //
+
+CREATE PROCEDURE Age_calc (
+    IN dob DATE,
+    OUT months INT,
+    OUT days INT
+)
+BEGIN
+    DECLARE years INT;
+
+    -- calculate full years
+    SET years = TIMESTAMPDIFF(YEAR, dob, CURDATE());
+
+    -- remaining months
+    SET months = TIMESTAMPDIFF(MONTH, dob, CURDATE()) % 12;
+
+    -- remaining days
+    SET days = TIMESTAMPDIFF(DAY, DATE_ADD(dob, INTERVAL years YEAR), CURDATE()) % 30;
+
+    -- return years (only return value possible via SELECT)
+    SELECT years AS Age_in_Years;
+END //
+
+DELIMITER ;
+
+CALL Age_calc('2003-05-10', @m, @d);
+
+SELECT @m AS Months, @d AS Days;
+
+Aim-
+To create a MySQL stored function/procedure that calculates the age of a person from their date of birth in years, months, and days using date functions.
+
+Objective-
+To understand stored procedures in MySQL.
+To use input and output parameters in procedures.
+To calculate age using date functions.
+To apply TIMESTAMPDIFF() and CURDATE() functions.
+To return multiple values using OUT parameters.
+To understand date arithmetic in SQL.
+
+Theory-
+A stored procedure is a set of SQL statements stored in the database that can be executed whenever required. It helps in performing repetitive tasks efficiently.
+In this program, a procedure named Age_calc is created to calculate the age of a person based on their date of birth.
+
+The procedure uses:
+TIMESTAMPDIFF() → to calculate difference between two dates
+CURDATE() → to get current system date
+IN parameter → to accept date of birth
+OUT parameters → to return months and days
+
+The age is calculated in three parts:
+Years → Total complete years between DOB and current date
+Months → Remaining months after years calculation
+Days → Remaining days after months calculation
+
+The procedure returns years as a result and months & days through OUT parameters.
+
+Conclusion-
+The stored procedure was successfully created and executed to calculate a person’s age in years, months, and days. This experiment helped in understanding date functions, stored procedures, and the use of IN and OUT parameters in MySQL.
