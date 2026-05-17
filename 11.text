@@ -29,3 +29,34 @@ DELIMITER ;
 CALL calculate_circle_area();
 
 SELECT * FROM areas;
+
+Aim-
+To create a MySQL stored procedure that calculates the area of a circle for radius values from 5 to 9 and stores the computed results in a table named areas using a WHILE loop.
+
+Objective-
+To understand the concept of stored procedures in MySQL.
+To use variables for computation inside SQL programs.
+To implement looping structure (WHILE loop) in MySQL.
+To perform mathematical calculations within SQL queries.
+To store computed results in a database table.
+To execute and display the output of a stored procedure.
+
+Theory-
+A stored procedure is a set of SQL statements stored in the database that can be executed whenever required. It helps in reducing code repetition and improving performance.
+In MySQL, procedural programming elements such as variables, loops, and conditional statements can be used inside stored procedures.
+
+In this experiment:
+A table areas is created to store radius and corresponding area values.
+A stored procedure calculate_circle_area() is defined.
+Two variables are used:
+r → stores radius (starting from 5)
+a → stores calculated area
+A WHILE loop is used to iterate radius values from 5 to 9.
+The formula used is:
+          Area of Circle=πr(its r square)
+
+where π is approximated as 3.14.
+Each calculated result is inserted into the areas table.
+
+Conclusion-
+The stored procedure was successfully created and executed. The area of a circle for radius values from 5 to 9 was calculated using a WHILE loop and stored in the areas table. This experiment helped in understanding stored procedures, loops, variables, and procedural SQL programming in MySQL.
