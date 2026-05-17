@@ -1,5 +1,5 @@
-CREATE DATABASE Order;
-USE Order;
+CREATE DATABASE Shop;
+USE Shop;
 
 CREATE TABLE Cust_Master(
     cust_no VARCHAR(10) PRIMARY KEY,
