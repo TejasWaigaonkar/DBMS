@@ -1,7 +1,4 @@
--- Create Database
 CREATE DATABASE Bank;
-
--- Use Database
 USE Bank;
 
 CREATE TABLE Branch(
@@ -14,9 +11,7 @@ CREATE TABLE Account(
     acc_no INT PRIMARY KEY,
     branch_name VARCHAR(50),
     balance DECIMAL(10,2) NOT NULL,
-    
-    FOREIGN KEY(branch_name)
-    REFERENCES Branch(branch_name)
+    FOREIGN KEY(branch_name) REFERENCES Branch(branch_name)
 );
 
 CREATE TABLE Customer(
@@ -28,36 +23,24 @@ CREATE TABLE Customer(
 CREATE TABLE Depositor(
     cust_name VARCHAR(50),
     acc_no INT,
-
     PRIMARY KEY(cust_name, acc_no),
-
-    FOREIGN KEY(cust_name)
-    REFERENCES Customer(cust_name),
-
-    FOREIGN KEY(acc_no)
-    REFERENCES Account(acc_no)
+    FOREIGN KEY(cust_name) REFERENCES Customer(cust_name),
+    FOREIGN KEY(acc_no) REFERENCES Account(acc_no)
 );
 
 CREATE TABLE Loan(
     loan_no INT PRIMARY KEY,
     branch_name VARCHAR(50),
     amount DECIMAL(10,2) NOT NULL,
-
-    FOREIGN KEY(branch_name)
-    REFERENCES Branch(branch_name)
+    FOREIGN KEY(branch_name) REFERENCES Branch(branch_name)
 );
 
 CREATE TABLE Borrower(
     cust_name VARCHAR(50),
     loan_no INT,
-
     PRIMARY KEY(cust_name, loan_no),
-
-    FOREIGN KEY(cust_name)
-    REFERENCES Customer(cust_name),
-
-    FOREIGN KEY(loan_no)
-    REFERENCES Loan(loan_no)
+    FOREIGN KEY(cust_name) REFERENCES Customer(cust_name),
+    FOREIGN KEY(loan_no) REFERENCES Loan(loan_no)
 );
 
 INSERT INTO Branch VALUES
@@ -98,9 +81,7 @@ FROM Loan
 WHERE branch_name='Wadia College'
 AND amount > 12000;
 
-SELECT Borrower.cust_name,
-       Loan.loan_no,
-       Loan.amount
+SELECT Borrower.cust_name, Loan.loan_no, Loan.amount
 FROM Borrower
 JOIN Loan
 ON Borrower.loan_no = Loan.loan_no;
