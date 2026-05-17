@@ -1,0 +1,119 @@
+CREATE DATABASE Company;
+USE Company;
+
+CREATE TABLE Employee(
+    emp_id INT PRIMARY KEY,
+    employee_name VARCHAR(50) UNIQUE,
+    street VARCHAR(100) NOT NULL,
+    city VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Company(
+    company_name VARCHAR(50) PRIMARY KEY,
+    city VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Works(
+    employee_name VARCHAR(50),
+    company_name VARCHAR(50),
+    salary DECIMAL(10,2) NOT NULL,
+    PRIMARY KEY(employee_name, company_name),
+    FOREIGN KEY(company_name) REFERENCES Company(company_name)
+);
+
+CREATE TABLE Manages(
+    employee_name VARCHAR(50),
+    manager_name VARCHAR(50),
+    PRIMARY KEY(employee_name),
+    FOREIGN KEY(employee_name) REFERENCES Employee(employee_name)
+);
+
+INSERT INTO Employee VALUES
+(101,'Aditya','JM Road','Pune'),
+(102,'Rahul','FC Road','Mumbai'),
+(103,'Sneha','MG Road','Delhi'),
+(104,'Pooja','Camp','Hyderabad');
+
+INSERT INTO Company VALUES
+('TCS','Mumbai'),
+('InfoSys','Pune'),
+('TechM','Hyderabad');
+
+INSERT INTO Works VALUES
+('Aditya','TCS',25000),
+('Rahul','InfoSys',18000),
+('Sneha','TechM',12000),
+('Pooja','TechM',9000);
+
+INSERT INTO Manages VALUES
+('Aditya','Rahul'),
+('Rahul','Sneha'),
+('Sneha','Pooja');
+
+SELECT employee_name
+FROM Works
+WHERE company_name ='TCS';
+
+SELECT employee_name, company_name
+FROM Works
+ORDER BY company_name ASC, employee_name DESC;
+
+UPDATE Employee
+SET city ='Bangalore'
+WHERE employee_name IN
+(
+    SELECT employee_name
+    FROM Works
+    WHERE company_name ='InfoSys'
+);
+
+SELECT Employee.employee_name, Employee.street, Employee.city
+FROM Employee
+JOIN Works
+ON Employee.employee_name = Works.employee_name
+WHERE Works.company_name ='TechM'
+AND Works.salary > 10000;
+
+ALTER TABLE Company
+ADD Asset DECIMAL(12,2);
+
+Aim-
+To create and manipulate a Company database using SQL by implementing tables with constraints, inserting records, updating records, altering table structure, and performing data retrieval using SQL queries.
+
+Objectives-
+To create a Company database with related tables.
+To define primary key, foreign key, unique, and not null constraints.
+To insert records into Employee, Company, Works, and Manages tables.
+To retrieve employee details using SELECT queries.
+To sort records using ORDER BY clause.
+To update records using UPDATE statement with subqueries.
+To retrieve data using JOIN operations and conditional clauses.
+To modify table structure using ALTER TABLE command.
+
+Theory-
+A Relational Database Management System (RDBMS) organizes data into related tables. SQL (Structured Query Language) is used to create, manipulate, and retrieve data efficiently.
+
+In this experiment, the following SQL concepts are used:
+CREATE DATABASE: Creates a new database.
+CREATE TABLE: Creates tables with attributes and constraints.
+PRIMARY KEY: Uniquely identifies each record in a table.
+FOREIGN KEY: Establishes relationships between tables.
+UNIQUE Constraint: Ensures that column values are unique.
+NOT NULL Constraint: Prevents NULL values in a column.
+INSERT INTO: Inserts records into tables.
+SELECT: Retrieves data from tables.
+ORDER BY: Sorts records in ascending or descending order.
+UPDATE: Modifies existing records in a table.
+JOIN: Combines records from multiple tables based on common attributes.
+ALTER TABLE: Modifies the structure of an existing table.
+
+The database consists of:
+Employee table containing employee details.
+Company table containing company information.
+Works table storing employee-company salary details.
+Manages table storing manager relationships.
+
+Queries are executed to retrieve employee details working in a specific company, sort records, update city information, display employees with salary conditions, and add a new column to the Company table.
+
+Conclusion-
+The Company database was successfully created and managed using SQL commands. Tables were connected using constraints and relationships. Records were inserted, updated, and retrieved successfully using different SQL operations such as JOIN, UPDATE, ORDER BY, and ALTER TABLE. This experiment enhanced understanding of relational database design and SQL data manipulation techniques.
