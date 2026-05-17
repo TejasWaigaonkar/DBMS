@@ -1,0 +1,112 @@
+CREATE DATABASE Library;
+USE Library;
+
+CREATE TABLE Borrower (
+    Rollin INT,
+    Name VARCHAR(50),
+    DateofIssue DATE,
+    NameofBook VARCHAR(100),
+    Status CHAR(1)
+);
+
+CREATE TABLE Fine (
+    Roll_no INT,
+    Date DATE,
+    Amt DECIMAL(10,2)
+);
+
+INSERT INTO Borrower VALUES
+(101, 'Amit', '2026-04-01', 'DBMS', 'I'),
+(102, 'Riya', '2026-03-10', 'OS', 'I');
+
+DELIMITER //
+
+CREATE PROCEDURE return_book (
+    IN p_rollno INT,
+    IN p_book VARCHAR(100)
+)
+BEGIN
+    DECLARE v_date DATE;
+    DECLARE v_days INT;
+    DECLARE v_fine DECIMAL(10,2) DEFAULT 0;
+
+    -- Get issue date
+    SELECT DateofIssue
+    INTO v_date
+    FROM Borrower
+    WHERE Rollin = p_rollno
+      AND NameofBook = p_book;
+
+    -- Calculate number of days
+    SET v_days = DATEDIFF(CURDATE(), v_date);
+
+    -- Fine rules
+    IF v_days BETWEEN 15 AND 30 THEN
+        SET v_fine = v_days * 5;
+
+    ELSEIF v_days > 30 THEN
+        SET v_fine = (30 * 5) + ((v_days - 30) * 50);
+
+    ELSE
+        SET v_fine = 0;
+    END IF;
+
+    -- Update status (Issued → Returned)
+    UPDATE Borrower
+    SET Status = 'R'
+    WHERE Rollin = p_rollno
+      AND NameofBook = p_book;
+
+    -- Insert fine if applicable
+    IF v_fine > 0 THEN
+        INSERT INTO Fine (Roll_no, Date, Amt)
+        VALUES (p_rollno, CURDATE(), v_fine);
+    END IF;
+
+END //
+
+DELIMITER ;
+
+CALL return_book(101, 'DBMS');
+
+SELECT * FROM Borrower;
+
+SELECT * FROM Fine;
+
+Aim-
+To create a MySQL stored procedure for a Library Management System that calculates fine for late book returns and updates borrower status accordingly.
+
+Objective-
+To design a Library database with Borrower and Fine tables.
+To understand stored procedures in MySQL.
+To use conditional statements (IF, ELSEIF) in SQL.
+To calculate fine based on number of delayed days.
+To update borrower status after book return.
+To insert fine details into a separate table.
+To use built-in date functions like DATEDIFF() and CURDATE().
+
+Theory-
+A stored procedure is a set of SQL statements that perform a specific task and can be executed whenever required.
+
+In this program, a Library Management System is implemented where:
+The Borrower table stores information about issued books.
+The Fine table stores penalty amounts for late returns.
+A stored procedure return_book() is created to handle book returns.
+🔹 Key Concepts Used:
+DATEDIFF() → Calculates difference between two dates.
+CURDATE() → Returns current system date.
+IF-ELSEIF → Used for conditional logic.
+Stored procedure parameters (IN mode).
+
+🔹 Fine Calculation Logic:
+15 to 30 days → ₹5 per day
+More than 30 days → ₹5 for first 30 days + ₹50 per day after 30 days
+Less than 15 days → No fine
+
+After calculation:
+Book status is updated from Issued (I) to Returned (R).
+Fine is inserted into Fine table if applicable.
+
+
+Conclusion-
+The stored procedure for the Library Management System was successfully created and executed. It correctly calculated fines based on delay rules, updated book status, and stored fine details in the Fine table. This experiment helped in understanding conditional logic, date functions, and procedural SQL programming in MySQL.
