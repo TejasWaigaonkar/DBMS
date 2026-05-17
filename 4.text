@@ -103,3 +103,47 @@ SELECT C.cust_name, O.order_no
 FROM Cust_Master C
 RIGHT JOIN Orders O
 ON C.cust_no = O.cust_no;
+
+
+Aim-
+To create and manage an Order database using SQL by implementing tables, inserting records, creating views, and performing different SQL operations such as JOINs, pattern matching, and UNION queries.
+
+Objectives-
+To create an Order database with related tables.
+To implement primary key and foreign key constraints.
+To insert records into customer, order, and product tables.
+To retrieve records using pattern matching with the LIKE operator.
+To use JOIN operations for combining data from multiple tables.
+To create and use SQL VIEW.
+To understand INNER JOIN, LEFT JOIN, RIGHT JOIN, and FULL OUTER JOIN concepts.
+To perform UNION operations for combining query results.
+
+Theory-
+A Relational Database Management System (RDBMS) stores data in multiple related tables. SQL (Structured Query Language) is used to create, manipulate, and retrieve data from these tables.
+
+In this experiment, the following SQL concepts are used:
+CREATE DATABASE: Creates a new database.
+CREATE TABLE: Creates tables with fields and constraints.
+PRIMARY KEY: Ensures unique identification of records.
+FOREIGN KEY: Maintains relationships between tables.
+INSERT INTO: Inserts records into tables.
+LIKE Operator: Used for pattern matching in strings.
+IN Operator: Used to match values from a specified list.
+
+JOIN Operations:
+INNER JOIN: Returns matching records from both tables.
+LEFT JOIN: Returns all records from the left table and matching records from the right table.
+RIGHT JOIN: Returns all records from the right table and matching records from the left table.
+FULL OUTER JOIN: Returns all records from both tables. Since MySQL does not directly support FULL OUTER JOIN, it is simulated using UNION of LEFT JOIN and RIGHT JOIN.
+VIEW: A virtual table created from a query result.
+UNION: Combines results of two SELECT statements and removes duplicates.
+
+The database contains:
+Cust_Master table for customer details.
+Orders table for order details.
+Product table for product information.
+
+Queries are performed to retrieve customer names, product details, order quantities, and combined data using different JOIN operations.
+
+Conclusion-
+The Order database was successfully created using SQL commands. Tables were connected using primary and foreign key constraints, and records were inserted successfully. Different SQL operations such as JOINs, pattern matching, VIEW creation, and UNION were executed successfully. This experiment improved understanding of relational database concepts and SQL query operations.
