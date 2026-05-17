@@ -1,0 +1,75 @@
+CREATE DATABASE Company;
+USE Company;
+
+CREATE TABLE emp (
+    emp_no INT PRIMARY KEY,
+    salary DECIMAL(10,2)
+);
+
+CREATE TABLE increment_salary (
+    emp_no INT,
+    salary DECIMAL(10,2)
+);
+
+INSERT INTO emp VALUES
+(1, 20000),
+(2, 30000),
+(3, 50000),
+(4, 15000);
+
+DELIMITER //
+
+CREATE TRIGGER salary_increment
+BEFORE UPDATE ON emp
+FOR EACH ROW
+BEGIN
+    DECLARE avg_sal DECIMAL(10,2);
+
+    -- calculate average salary
+    SELECT AVG(salary) INTO avg_sal FROM emp;
+
+    -- check condition
+    IF OLD.salary < avg_sal THEN
+
+        -- increase salary by 10%
+        SET NEW.salary = OLD.salary + (OLD.salary * 0.10);
+
+        -- insert record into log table
+        INSERT INTO increment_salary(emp_no, salary)
+        VALUES (OLD.emp_no, NEW.salary);
+
+    END IF;
+
+END //
+
+DELIMITER ;
+
+UPDATE emp
+SET salary = salary
+WHERE emp_no = 1;
+
+UPDATE emp SET salary = 25000 WHERE emp_no = 1;
+
+SELECT * FROM emp;
+
+SELECT * FROM increment_salary;
+
+Aim-
+To create a MySQL trigger that automatically increases the salary of employees by 10% before updating the employee table and stores the updated salary details in a separate log table.
+
+Objective-
+To understand the concept of triggers in MySQL.
+To implement a BEFORE UPDATE trigger.
+To perform automatic salary modification based on conditions.
+To calculate average salary using aggregate functions.
+To store updated salary records in a log table.
+To learn row-level processing using triggers
+
+Theory-
+A trigger in MySQL is a special type of stored program that automatically executes in response to events such as INSERT, UPDATE, or DELETE on a table.
+In this experiment, a trigger is created on the emp table to automatically modify salary values before an update occurs. Another table, increment_salary, is used to store the updated salary records.
+The trigger calculates the average salary of all employees using the AVG() function. If the existing salary of an employee is less than the average salary, the trigger increases the salary by 10%. The updated salary is then stored in the log table.
+The OLD and NEW keywords are used to access the existing and modified values of a record inside the trigger.
+
+Conclusion-
+The MySQL trigger was successfully created and executed. It automatically updated employee salaries based on a condition and stored the modified records in a separate log table. This experiment helped in understanding triggers, automatic execution of SQL statements, and real-time data manipulation in MySQL.
