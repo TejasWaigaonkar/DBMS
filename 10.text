@@ -1,0 +1,199 @@
+use CompanyDB
+
+db.Employee.insertMany([
+
+{
+    Name: {FName: "Amit",nLName: "Sharma"},
+    Company_name: "Infosys",
+    Salary: 45000,
+    Designation: "Programmer",
+    Age: 26,
+    Expertise: ["Mongodb", "Mysql", "Cassandra"],
+    DOB: "1999-05-10",
+    Email_id: "amit@gmail.com",
+    Contact: "9876543210",
+    Address: [{ PAddr: "Pune" }, { LAddr: "Mumbai" } ]
+},
+
+{
+    Name: {FName: "Riya", LName: "Patil"},
+    Company_name: "TCS",
+    Salary: 35000,
+    Designation: "Tester",
+    Age: 25,
+    Expertise: ["Java", "Mysql", "Python"],
+    DOB: "2000-08-15",
+    Email_id: "riya@gmail.com",
+    Contact: "9123456780",
+    Address: [{ PAddr: "Nashik" }, { LAddr: "Pune" }]
+},
+
+{
+    Name: {FName: "Karan", LName: "Joshi"},
+    Company_name: "Infosys",
+    Salary: 55000,
+    Designation: "Programmer",
+    Age: 28,
+    Expertise: ["Mongodb", "Mysql", "Cassandra"],
+    DOB: "1997-03-12",
+    Email_id: "karan@gmail.com",
+    Contact: "9988776655",
+    Address: [{ PAddr: "Nagpur" },{ LAddr: "Pune" }]
+},
+
+{
+    Name: {FName: "Sneha",LName: "Kulkarni"},
+    Company_name: "TCS",
+    Salary: 40000,
+    Designation: "Developer",
+    Age: 27,
+    Expertise: ["React", "NodeJS", "MongoDB"],
+    DOB: "1998-09-25",
+    Email_id: "sneha@gmail.com",
+    Contact: "9012345678",
+    Address: [{ PAddr: "Satara" }, { LAddr: "Mumbai" }]
+},
+
+{
+    Name: {FName: "Rahul", LName: "Verma"
+    },
+    Company_name: "Wipro",
+    Salary: 30000,
+    Designation: "Programmer",
+    Age: 24,
+    Expertise: ["C", "C++", "Java"],
+    DOB: "2001-01-20",
+    Email_id: "rahul@gmail.com",
+    Contact: "9090909090",
+    Address: [{ PAddr: "Delhi" }, { LAddr: "Noida" }]
+}
+])
+
+var map1 = function() {emit(this.Company_name, this.Salary); 
+};
+
+var reduce1 = function(key, values) { return Array.sum(values);
+};
+
+db.Employee.mapReduce( map1, reduce1, {out: "TotalSalaryPerCompany"} )
+
+db.TotalSalaryPerCompany.find()
+
+var map2 = function() { emit(this.Company_name, this.Salary); 
+};
+
+var reduce2 = function(key, values) { return Array.sum(values); };
+
+db.Employee.mapReduce( map2, reduce2,
+    {query: { Company_name: "TCS" }, out: "TCSTotalSalary"}
+)
+
+db.TCSTotalSalary.find()
+
+var map3 = function() {
+for(var i = 0; i < this.Address.length; i++) {
+if(this.Address[i].PAddr == "Pune" || this.Address[i].LAddr == "Pune") {
+emit(this.Company_name, {total: this.Salary, count: 1});
+        }
+    }
+};
+
+var reduce3 = function(key, values) {
+    var result = {total: 0, count: 0};
+
+    values.forEach(function(v) {result.total += v.total; result.count += v.count; } );
+    return result;
+};
+
+var finalize3 = function(key, reducedValue) {return reducedValue.total / reducedValue.count; };
+
+db.Employee.mapReduce(map3, reduce3, {out: "AverageSalaryPune", finalize: finalize3} )
+
+db.AverageSalaryPune.find()
+
+var map4 = function() {for(var i = 0; i < this.Address.length; i++) {
+if(this.Address[i].PAddr == "Pune" || this.Address[i].LAddr == "Pune") {
+emit("Pune", 1);
+}
+}
+};
+
+var reduce4 = function(key, values) {return Array.sum(values);};
+
+db.Employee.mapReduce( map4,reduce4,
+    {out: "PuneCount"}
+)
+
+db.PuneCount.find()
+
+var map5 = function() {
+    for(var i = 0; i < this.Address.length; i++) {
+        if((this.Address[i].PAddr == "Pune" || this.Address[i].LAddr == "Pune") &&
+            this.Age > 40) {emit("Pune_Age_Greater_40", 1); } }
+};
+
+var reduce5 = function(key, values) {
+    return Array.sum(values);
+};
+
+db.Employee.mapReduce(map5, reduce5,
+    { out: "PuneAgeGreater40"}
+)
+
+db.PuneAgeGreater40.find()
+
+Aim-
+To perform MapReduce operations on the MongoDB Employee collection to compute aggregated results such as total salary per company, filtered salary calculations, and conditional aggregations using embedded documents and arrays.
+
+Objective-
+To understand MapReduce in MongoDB.
+To perform data aggregation using map and reduce functions.
+To calculate total salary per company.
+To filter data using query conditions inside MapReduce.
+To use embedded documents and arrays in aggregation logic.
+To apply finalize functions for post-processing results.
+To perform conditional grouping and counting operations.
+
+Theory-
+MongoDB MapReduce is a data processing technique used for large-scale aggregation. It consists of two main functions:
+
+Map function → Emits key-value pairs
+Reduce function → Aggregates values for each key
+
+Optionally, a finalize function can be used to process the reduced output.
+
+In this experiment, the Employee collection contains:
+Embedded documents (Name)
+Arrays (Expertise, Address)
+Fields like Salary, Age, Company_name, etc.
+
+MapReduce Operations Performed:
+1. Total Salary Per Company:
+Groups employees by Company_name
+Sums salaries using Array.sum()
+2. Salary of TCS Employees Only:
+Uses query filter { Company_name: "TCS" }
+Computes total salary for TCS employees only
+3. Average Salary of Employees in Pune:
+Checks embedded Address array for "Pune"
+Uses reduce function to compute total and count
+Finalize function calculates average salary
+4. Count of Employees in Pune:
+Emits count = 1 for each matching Pune record
+Reduce function sums total count
+5. Employees in Pune with Age > 40:
+Applies multiple conditions:
+Address contains Pune
+Age > 40
+Counts matching employees
+
+Key Concepts Used
+Map function (emit key-value pairs)
+Reduce function (aggregation logic)
+Finalize function (post-processing results)
+Embedded documents and arrays
+Conditional filtering inside map
+Group-wise aggregation
+
+Conclusion-
+MapReduce operations were successfully performed on the MongoDB Employee collection. Various aggregations such as total salary per company, filtered salary calculations, average salary computation, and conditional counting were executed successfully. This experiment helped in understanding MongoDB aggregation techniques, MapReduce framework, and handling complex data structures like arrays and embedded documents.
